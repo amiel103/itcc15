@@ -32,6 +32,25 @@
     <script src="{% static 'posApp/assets/bootstrap/js/bootstrap.min.js' %}"></script>
     <script src="{% static 'posApp/assets/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'posApp/assets/bootstrap/js/popper.min.js' %}"></script>
+    <!-- Include the PayPal JavaScript SDK -->
+    <script src="https://www.paypal.com/sdk/js?client-id=test&currency=USD"></script>
+    <style>
+        /* Media query for mobile viewport */
+        @media screen and (max-width: 400px) {
+            #paypal-button-container {
+                width: 20%;
+                display: inline-block;
+            }
+        }
+        
+        /* Media query for desktop viewport */
+        @media screen and (min-width: 400px) {
+            #paypal-button-container {
+                width: 250px;
+                display: inline-block;
+            }
+        }
+    </style>
 </head>
 
 <body>
