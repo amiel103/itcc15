@@ -105,15 +105,19 @@
             <div class="row">
                 <div class="col-md-12 text-end">
                     <!-- Set up a container element for the button -->
-                    <br>
-                    <div class="col-md-12 float-sm-right" id="paypal-button-container"></div>
-                    <div></div>
-                    <button class="btn btn-primary btn-sm rounded-0" type="button" id="check_out"><i class="mdi mdi-save"></i> Checkout</button>
-                    
-    <script>
-       
+     <div id="paypal-button-container"></div>
+
+     <!-- Include the PayPal JavaScript SDK -->
+     <script src="https://www.paypal.com/sdk/js?client-id=AR4Fcfkp3JA46xcZJTl1ATib1ZVYRUup8IK9AT4NgE9YoViJBOI-kAC9oONORF47da6j40Rr3JTKirof&currency=PHP">
     </script>
-                    
+ 
+    <script>
+    // Render the PayPal button into #paypal-button-container
+    
+    </script>
+
+                    <button class="btn btn-primary btn-sm rounded-0" type="button" id="check_out"><i class="mdi mdi-save"></i>Checkout</button>
+                </div>
             </div>
         </form>
     </div>
@@ -133,7 +137,9 @@
         <td class="px-2 py-1 product_total text-end"></td>
     </tr>
 </noscript> {% endblock pageContent %} {% block ScriptBlock %}
+
 <script>
+
     var product_json = '{{ product_json }}'
     if (product_json == "" || product_json == "{}") {
         product_json = {}
@@ -275,27 +281,31 @@
         })
     })
 
-     // Render the PayPal button into #paypal-button-container
-     paypal.Buttons({
-            // Set up the transaction
-            createOrder: function (data, actions) {
-                                return actions.order.create({
-                                    purchase_units: [{
-                                        amount: {
-                                            value: $('[name="grand_total"]').val()
-                                        }
-                                    }]
-                                });
-                            },
+    paypal.Buttons({
+        // Set up the transaction
+        createOrder: function(data, actions) {
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: $('[name="grand_total"]').val()
+                    }
+                }]
+            });
+        },
 
-                            // Finalize the transaction
-                            onApprove: function (data, actions) {
-                                return actions.order.capture().then(function (details) {
-                                    // Show a success message to the buyer
-                                    alert('Transaction completed by ' + details.payer.name
-                                        .given_name + '!');
-                                });
-                            }
+        // Finalize the transaction
+        onApprove: function (data, actions) {
+            return actions.order.capture().then(function(details) {
+                // Show a success message to the buyer
+                alert('Transaction completed by ' + details.payer.name
+                    .given_name + '!');
+                    
+                $('#pos-form').submit()     
+            });
+         
+           
+        }
         }).render('#paypal-button-container');
+
 </script>
 {% endblock ScriptBlock %}
