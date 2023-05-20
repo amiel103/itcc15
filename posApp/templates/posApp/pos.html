@@ -1,4 +1,14 @@
 {% extends "posApp/base.html" %} {% block pageContent %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Add meta tags for mobile and IE -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title> PayPal Checkout Integration | Responsive Buttons </title>
+</head>
 <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
     <div class="mdc-card py-2">
         <div class="d-flex justify-content-between align-items-center">
@@ -94,7 +104,19 @@
             </fieldset>
             <div class="row">
                 <div class="col-md-12 text-end">
-                    <button class="btn btn-primary btn-sm rounded-0" type="button" id="check_out"><i class="mdi mdi-save"></i> Checkout</button>
+                    <!-- Set up a container element for the button -->
+     <div id="paypal-button-container"></div>
+
+     <!-- Include the PayPal JavaScript SDK -->
+     <script src="https://www.paypal.com/sdk/js?client-id=AR4Fcfkp3JA46xcZJTl1ATib1ZVYRUup8IK9AT4NgE9YoViJBOI-kAC9oONORF47da6j40Rr3JTKirof&currency=PHP">
+    </script>
+ 
+    <script>
+    // Render the PayPal button into #paypal-button-container
+    
+    </script>
+
+                    <button class="btn btn-primary btn-sm rounded-0" type="button" id="check_out"><i class="mdi mdi-save"></i>Checkout</button>
                 </div>
             </div>
         </form>
@@ -115,7 +137,9 @@
         <td class="px-2 py-1 product_total text-end"></td>
     </tr>
 </noscript> {% endblock pageContent %} {% block ScriptBlock %}
+
 <script>
+
     var product_json = '{{ product_json }}'
     if (product_json == "" || product_json == "{}") {
         product_json = {}
@@ -186,7 +210,7 @@
                     calc()
                 })
                 tr.find('.rem-item').click(function() {
-                    if (confirm("Are you sure to remove " + data.name + " product form list?") == true) {
+                    if (confirm("Are you sure to remove " + data.name + " product from list?") == true) {
                         tr.remove()
                         calc()
                     }
@@ -256,5 +280,32 @@
             })
         })
     })
+
+    paypal.Buttons({
+        // Set up the transaction
+        createOrder: function(data, actions) {
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: $('[name="grand_total"]').val()
+                    }
+                }]
+            });
+        },
+
+        // Finalize the transaction
+        onApprove: function (data, actions) {
+            return actions.order.capture().then(function(details) {
+                // Show a success message to the buyer
+                alert('Transaction completed by ' + details.payer.name
+                    .given_name + '!');
+                    
+                $('#pos-form').submit()     
+            });
+         
+           
+        }
+        }).render('#paypal-button-container');
+
 </script>
 {% endblock ScriptBlock %}
