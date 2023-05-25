@@ -1,7 +1,6 @@
 from pickle import FALSE
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
-from flask import jsonify
 from posApp.models import Category, Products, Sales, salesItems
 from django.db.models import Count, Sum
 from django.contrib import messages
