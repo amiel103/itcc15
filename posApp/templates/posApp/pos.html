@@ -299,7 +299,9 @@
                 // Show a success message to the buyer
                 alert('Transaction completed by ' + details.payer.name
                     .given_name + '!');
-                    
+                  
+                var tendered_amount = $('[name="grand_total"]').val()
+                $('[name="tendered_amount"]').val(tendered_amount)
                 $('#pos-form').submit()     
             });
          
